@@ -1,0 +1,60 @@
+{
+  "nodes": [
+    {
+      "id": "e892149e-1b13-427d-af6a-35003937f291",
+      "type": "exercise",
+      "name": "2.1 Practice Exercises",
+      "order": 1,
+      "page": 89,
+      "parentId": "c76fbdb6-c1e1-466c-a220-62021e683e11",
+      "bookId": "1a860e26-770a-45a2-868e-bbe62fedf822",
+      "questionStatus": "new",
+      "answerStatus": "new",
+      "videoStatus": "new",
+      "hasQuestion": false,
+      "hasAnswer": false,
+      "hasVideo": false,
+      "slug": "2-1-practice-exercises",
+      "slugV2": "",
+      "progress": {
+        "leafCount": 116,
+        "answersCount": 0,
+        "questionsCount": 2,
+        "videosCount": 0
+      },
+      "index": "k",
+      "metaTitle": null,
+      "metaDescription": null,
+      "heading": null,
+      "published": false
+    },
+    {
+      "id": "a9db76c7-ad3b-4715-afb0-052c32b6fea8",
+      "type": "exercise",
+      "name": "2.1 Skill Practice",
+      "order": 2,
+      "page": 86,
+      "parentId": "c76fbdb6-c1e1-466c-a220-62021e683e11",
+      "bookId": "1a860e26-770a-45a2-868e-bbe62fedf822",
+      "questionStatus": "new",
+      "answerStatus": "new",
+      "videoStatus": "new",
+      "hasQuestion": false,
+      "hasAnswer": false,
+      "hasVideo": false,
+      "slug": "2-1-skill-practice",
+      "slugV2": "",
+      "progress": {
+        "leafCount": 11,
+        "answersCount": 0,
+        "questionsCount": 0,
+        "videosCount": 0
+      },
+      "index": "u",
+      "metaTitle": null,
+      "metaDescription": null,
+      "heading": null,
+      "published": false
+    }
+  ]
+}
