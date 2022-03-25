@@ -55,13 +55,14 @@ export function signInUser(req, res) {
 }
 
 export function signOutUser(req, res) {
-  let sql = `UPDATE users SET accessToken = 'null' WHERE userid='${req.session.userid}';`;
+  let sql = `UPDATE users SET accessToken = 'null' WHERE accessToken = '${req.headers.accesstoken}';`;
   db.query(sql, (err, result) => {
     if (err) {
       return res.json({
         error: err.code,
       });
     }
+    console.log(result);
     req.session.destroy();
     res.json({
       success: "SIGNED_OUT",
