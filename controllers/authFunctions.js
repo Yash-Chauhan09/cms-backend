@@ -62,7 +62,7 @@ export function signOutUser(req, res) {
         error: err.code,
       });
     }
-    console.log(result);
+    // console.log(result);
     req.session.destroy();
     res.json({
       success: "SIGNED_OUT",
