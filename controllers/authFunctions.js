@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 export function signInUser(req, res) {
   let { email, password } = req.body;
-  let token = crypto.randomBytes(1).toString("hex");
+  let token = crypto.randomBytes(128).toString("hex");
   db.execute(`SELECT * FROM users WHERE email = '${email}'`).then(
     async (results) => {
       if (results[0].length > 0) {

@@ -22,7 +22,6 @@ export function postTOC(req, res) {
   let bookTable = removeHyphens(bookId);
   let uuid = uuidv4();
   console.log(uuid);
-  let addNode = `INSERT INTO ${bookTable} VALUES('${uuid}','${req.body.type}','${req.body.parentid}','${req.body.bookid}','${req.body.name}','${req.body.page}','${req.body.question}','${req.body.answer}','null')`;
 
   db.execute(
     `INSERT INTO ${bookTable} VALUES('${uuid}','${req.body.type}','${req.body.parentid}','${req.body.bookid}','${req.body.name}','${req.body.page}','${req.body.question}','${req.body.answer}')`
