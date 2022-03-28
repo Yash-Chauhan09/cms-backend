@@ -44,7 +44,7 @@ indexRouter
   .delete(checkLoggedIn, checkPermission(["admin", "superuser"]), deleteTOC);
 
 indexRouter
-  .route("book/:bookid/qc/parent/:parentid/node/:nodeid/")
+  .route("/book/:bookid/qc/parent/:parentid/node/:nodeid/")
   .post(
     checkLoggedIn,
     checkPermission(["admin", "quality-checker"]),

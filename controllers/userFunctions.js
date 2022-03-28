@@ -6,17 +6,10 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 export function getUsers(req, res) {
-  db.query(
-    "SELECT userid,email,authorized_by,userRole FROM users",
-    (err, results) => {
-      if (err) {
-        res.json({
-          error: err.code,
-        });
-        return;
-      }
+  db.execute(`SELECT userid,email,authorized_by,userRole FROM users`).then(
+    (results) => {
       console.log(results);
-      res.json(results);
+      res.json(results[0]);
     }
   );
 }
@@ -28,14 +21,9 @@ export async function postUser(req, res) {
 
   console.log(salt, userPassword, resetToken);
   let sql = `INSERT INTO users VALUES ('${userid}','${req.body.email}','${userPassword}','${req.session.userid}','${req.body.userRole}',0,'${resetToken}','null')`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.log(err);
-      res.json({
-        error: err.code,
-      });
-      return;
-    }
+
+  db.execute(sql).then((results) => {
+    console.log(results);
     let passwordResetLink = `${req.protocol}://${req.get(
       "host"
     )}/reset-password/${resetToken}`;
@@ -45,8 +33,7 @@ export async function postUser(req, res) {
       password: req.body.password,
       resetLink: passwordResetLink,
     };
-    // sendMail(user);
-    console.log(results);
+    sendMail(user);
     res.send({
       success: "new user added",
     });
@@ -63,14 +50,8 @@ export async function putUser(req, res) {
   const salt = await bcrypt.genSalt(12);
   let userPassword = await bcrypt.hash(req.body.password, salt);
   let sql = `UPDATE users SET password = '${userPassword}', verified = 1, resetPasswordToken = 'null' WHERE resetPasswordToken = '${resetToken}';`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.log(err);
-      res.json({
-        error: err.code,
-      });
-      return;
-    }
+
+  db.execute(sql).then((results) => {
     console.log(results);
     res.json({
       success: "password updated",
