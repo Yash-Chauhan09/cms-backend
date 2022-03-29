@@ -41,11 +41,18 @@ export function getTOC(req, res) {
   } else {
     sql = `SELECT nodeid, type, parentid, bookid, name, page FROM ${bookId} WHERE type = 'chapter' `;
   }
-
-  db.execute(sql).then((results) => {
-    console.log(results);
-    res.json(results[0]);
-  });
+  let obj = {};
+  db.execute(`SELECT * FROM books WHERE bookid = '${req.params.bookid}'`).then(
+    (results) => {
+      console.log(results[0]);
+      obj.book_info = results[0][0];
+      db.execute(sql).then((result) => {
+        console.log(result);
+        obj.toc = result[0];
+        res.json(obj);
+      });
+    }
+  );
 }
 
 export function postQCremarks(req, res) {
