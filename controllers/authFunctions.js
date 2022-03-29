@@ -4,66 +4,42 @@ import crypto from "crypto";
 
 export function signInUser(req, res) {
   let { email, password } = req.body;
-  let findUser = `SELECT * FROM users WHERE email = '${email}'`;
-  db.query(findUser, async (err, result) => {
-    if (err) {
-      console.log(err);
-      res.json({
-        error: err.code,
-      });
-      return;
-    } else {
-      if (result.length == 0) {
-        res.json({
-          error: "INVALID_CREDENTIALS",
-          type: "AUTHORIZATION",
-        });
-      } else {
-        let valid = await bcrypt.compare(password, result[0].password);
+  let token = crypto.randomBytes(128).toString("hex");
+  db.execute(`SELECT * FROM users WHERE email = '${email}'`).then(
+    async (results) => {
+      if (results[0].length > 0) {
+        console.log(results[0][0].password);
+        let valid = await bcrypt.compare(password, results[0][0].password);
         if (!valid) {
-          res.json({
+          return res.json({
             error: "INVALID_CREDENTIALS",
-            type: "AUTHORIZATION",
           });
         }
-        if (result[0].verified == 0) {
+        db.execute(
+          `UPDATE users SET accessToken = '${token}' WHERE email = '${email}'`
+        ).then((data) => {
           res.json({
-            error: "ACCOUNT NOT VERIFIED",
-            message:
-              "Please reset your password from the link provided in mail to verify your account",
-          });
-        }
-        req.session.userid = result[0].userid;
-        let token = crypto.randomBytes(128).toString("hex");
-        let sql = `UPDATE users SET accessToken = '${token}' WHERE userid='${result[0].userid}';`;
-        db.query(sql, (err2, result2) => {
-          if (err2) {
-            return res.json({
-              error: err2.code,
-            });
-          }
-          res.json({
-            userid: result[0].userid,
-            email: result[0].email,
-            role: result[0].userRole,
+            userid: results[0][0].userid,
+            email: results[0][0].email,
+            role: results[0][0].userRole,
             accessToken: token,
           });
         });
+      } else {
+        res.json({
+          error: "INVALID_CREDENTIALS",
+        });
       }
     }
-  });
+  );
 }
 
 export function signOutUser(req, res) {
-  let sql = `UPDATE users SET accessToken = 'null' WHERE accessToken = '${req.headers.accesstoken}';`;
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.json({
-        error: err.code,
-      });
-    }
-    // console.log(result);
-    req.session.destroy();
+  console.log(req.headers);
+  db.execute(
+    `UPDATE users SET accessToken = 'null' WHERE accessToken = '${req.headers.accesstoken}'`
+  ).then((results) => {
+    console.log(results);
     res.json({
       success: "SIGNED_OUT",
     });

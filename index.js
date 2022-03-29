@@ -5,36 +5,22 @@ import express from "express";
 import userRouter from "./Routers/userRouter.js";
 import authRouter from "./Routers/authRouter.js";
 import indexRouter from "./Routers/indexRouter.js";
-import cookieParser from "cookie-parser";
-import session from "express-session";
 import multer from "multer";
 import cloudinary from "./config/cloudinary.js";
 import { storage } from "./config/cloudinary.js";
-import MemorySession from "memorystore";
 
-const MemoryStore = MemorySession(session);
 const upload = multer({ storage });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
     origin: "https://freecoedu-cms.herokuapp.com",
     allowedHeaders: "*",
   })
 );
-app.use(
-  session({
-    store: new MemoryStore({
-      checkPeriod: 86400000, // prune expired entries every 24h
-    }),
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/index", indexRouter);
@@ -87,7 +73,6 @@ app.post("/uploadvideo", async (req, res) => {
     });
   }
 });
-
 // app.post("/uploadvideo", upload.single("video"), (req, res) => {
 //   console.log(req.file);
 //   res.json({
