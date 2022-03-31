@@ -35,7 +35,8 @@ indexRouter
 
 indexRouter
   .route("/book/:bookid/children/:nodeid")
-  .get(checkLoggedIn, checkPermission(["admin", "superuser"]), getNodeInTOC);
+  .get(checkLoggedIn, checkPermission(["admin", "superuser"]), getNodeInTOC)
+  .post(checkLoggedIn, checkPermission(["admin", "superuser"]), postTOC);
 
 indexRouter
   .route("/book/:bookid/node/:nodeid")
