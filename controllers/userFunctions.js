@@ -20,22 +20,29 @@ export async function postUser(req, res) {
   let resetToken = crypto.randomBytes(32).toString("hex");
 
   console.log(salt, userPassword, resetToken);
-  let sql = `INSERT INTO users VALUES ('${userid}','${req.body.email}','${userPassword}','${req.session.userid}','${req.body.userRole}',0,'${resetToken}','null')`;
 
-  db.execute(sql).then((results) => {
-    console.log(results);
-    let passwordResetLink = `${req.protocol}://${req.get(
-      "host"
-    )}/reset-password/${resetToken}`;
-    console.log(passwordResetLink);
-    let user = {
-      email: req.body.email,
-      password: req.body.password,
-      resetLink: passwordResetLink,
-    };
-    sendMail(user);
-    res.send({
-      success: "new user added",
+  db.execute(
+    `SELECT userid FROM users WHERE accessToken='${req.headers.accesstoken}'`
+  ).then((result) => {
+    // console.log(results, results[0], results[0][0].userid);
+    let adminId = result[0][0].userid;
+    let sql = `INSERT INTO users VALUES ('${userid}','${req.body.email}','${userPassword}','${adminId}','${req.body.userRole}',0,'${resetToken}','null')`;
+
+    db.execute(sql).then((results) => {
+      console.log(results);
+      let passwordResetLink = `${req.protocol}://${req.get(
+        "host"
+      )}/reset-password/${resetToken}`;
+      console.log(passwordResetLink);
+      let user = {
+        email: req.body.email,
+        password: req.body.password,
+        resetLink: passwordResetLink,
+      };
+      sendMail(user);
+      res.send({
+        success: "new user added",
+      });
     });
   });
 }
