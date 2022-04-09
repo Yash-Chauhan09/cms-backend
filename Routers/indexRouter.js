@@ -6,6 +6,7 @@ import {
   deleteBook,
   getTOC,
   postTOC,
+  updateBook,
   postQCremarks,
   getQCremarks,
 } from "../controllers/bookFunctions.js";
@@ -31,7 +32,8 @@ indexRouter
   .route("/book/:bookid")
   .get(checkLoggedIn, checkPermission(["admin", "superuser"]), getTOC)
   .post(checkLoggedIn, checkPermission(["admin", "superuser"]), postTOC)
-  .delete(checkLoggedIn, checkPermission(["admin", "superuser"]), deleteBook);
+  .delete(checkLoggedIn, checkPermission(["admin", "superuser"]), deleteBook)
+  .put(checkLoggedIn, checkPermission(["admin", "superuser"]), updateBook);
 
 indexRouter
   .route("/book/:bookid/children/:nodeid")
