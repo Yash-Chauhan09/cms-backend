@@ -32,6 +32,19 @@ export function postTOC(req, res) {
     });
   });
 }
+
+export function updateBook(req, res) {
+  let bookId = req.params.bookid;
+
+  let sql = `UPDATE books SET type = '${req.body.type}',isbn = '${req.body.isbn}',edition = '${req.body.edition}', published = '${req.body.published}',publisher = '${req.body.publisher}',title = '${req.body.title}', subject = '${req.body.subject}', author = '${req.body.author}', description = '${req.body.description}', board = '${req.body.board}', class = '${req.body.class}', lang = '${req.body.lang}', other_tags = '${req.body.other_tags}', cover = '${req.body.cover}' WHERE bookid = '${bookId}'`;
+  db.execute(sql).then((results) => {
+    console.log(results);
+    res.json({
+      success: "book updated",
+    });
+  });
+}
+
 export function getTOC(req, res) {
   let bookId = removeHyphens(req.params.bookid);
   let sql;
