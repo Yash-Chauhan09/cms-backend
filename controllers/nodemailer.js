@@ -23,7 +23,7 @@ export async function sendMail(data) {
     <h1>click on the below link to reset your password</h1>
     <h3>email : ${data.email}</h3>
     <h3>password : ${data.password}</h3>
-    <a href=${data.resetLink}>reset link</a>
+    <h3>Sign-in here: http://localhost:3000/auth/signin</h3>
     `, // html body
   });
 
