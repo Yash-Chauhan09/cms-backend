@@ -10,7 +10,14 @@ export function checkLoggedIn(req, res, next) {
         type: "AUTHORIZATION",
       });
     } else {
-      next();
+      if (results[0][0].verified == 0) {
+        return res.json({
+          error: "user not verified",
+          message: "please reset your password to verify your account",
+        });
+      } else {
+        next();
+      }
     }
   });
 }
