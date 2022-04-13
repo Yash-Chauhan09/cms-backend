@@ -21,30 +21,40 @@ export async function postUser(req, res) {
 
   console.log(salt, userPassword, resetToken);
 
-  db.execute(
-    `SELECT userid FROM users WHERE accessToken='${req.headers.accesstoken}'`
-  ).then((result) => {
-    // console.log(results, results[0], results[0][0].userid);
-    let adminId = result[0][0].userid;
-    let sql = `INSERT INTO users VALUES ('${userid}','${req.body.email}','${userPassword}','${adminId}','${req.body.userRole}',0,'${resetToken}','null')`;
+  db.execute(`SELECT * FROM users WHERE email = '${req.body.email}'`).then(
+    (resultt) => {
+      if (resultt[0].length != 0) {
+        return res.json({
+          error: "user already exists",
+          message: "this email is already used by another user",
+        });
+      }
+      db.execute(
+        `SELECT userid FROM users WHERE accessToken='${req.headers.accesstoken}'`
+      ).then((result) => {
+        // console.log(results, results[0], results[0][0].userid);
+        let adminId = result[0][0].userid;
+        let sql = `INSERT INTO users VALUES ('${userid}','${req.body.email}','${userPassword}','${adminId}','${req.body.userRole}',0,'${resetToken}','null')`;
 
-    db.execute(sql).then((results) => {
-      console.log(results);
-      let passwordResetLink = `${req.protocol}://${req.get(
-        "host"
-      )}/reset-password/${resetToken}`;
-      console.log(passwordResetLink);
-      let user = {
-        email: req.body.email,
-        password: req.body.password,
-        resetLink: passwordResetLink,
-      };
-      sendMail(user);
-      res.send({
-        success: "new user added",
+        db.execute(sql).then((results) => {
+          console.log(results);
+          let passwordResetLink = `${req.protocol}://${req.get(
+            "host"
+          )}/reset-password/${resetToken}`;
+          console.log(passwordResetLink);
+          let user = {
+            email: req.body.email,
+            password: req.body.password,
+            resetLink: passwordResetLink,
+          };
+          sendMail(user);
+          res.send({
+            success: "new user added",
+          });
+        });
       });
-    });
-  });
+    }
+  );
 }
 
 export async function putUser(req, res) {
@@ -61,7 +71,27 @@ export async function putUser(req, res) {
   db.execute(sql).then((results) => {
     console.log(results);
     res.json({
-      success: "password updated",
+      success: "User Verified And Password updated",
     });
   });
+}
+
+export async function deleteUser(req, res) {
+  db.execute(`SELECT * FROM users WHERE userid = '${req.params.userid}'`).then(
+    (resultt) => {
+      if (resultt[0].length == 0) {
+        console.log(resultt);
+        return res.json({
+          error: "user does not exists",
+        });
+      }
+      db.execute(`DELETE FROM users WHERE userid='${req.params.userid}'`).then(
+        (result) => {
+          return res.json({
+            success: "user deleted",
+          });
+        }
+      );
+    }
+  );
 }
