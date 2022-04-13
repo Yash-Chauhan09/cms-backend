@@ -23,6 +23,7 @@ export function signInUser(req, res) {
             email: results[0][0].email,
             role: results[0][0].userRole,
             accessToken: token,
+            resetPasswordToken: results[0][0].resetPasswordToken,
           });
         });
       } else {
