@@ -57,3 +57,17 @@ export function getNodeInfo(req, res) {
     res.json(results[0][0]);
   });
 }
+
+export function updateAnswer(req, res) {
+  let bookId = removeHyphens(req.params.bookid);
+  let nodeId = req.params.nodeid;
+  let sql = `UPDATE ${bookId} SET answer = '${req.body.answer}' WHERE nodeid = '${nodeId}'`;
+  console.log(bookId, nodeId, sql);
+
+  db.execute(sql).then((results) => {
+    console.log(results);
+    res.json({
+      success: "answer updated",
+    });
+  });
+}
