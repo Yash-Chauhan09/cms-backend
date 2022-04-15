@@ -1,25 +1,32 @@
 import db from "../config/db.js";
 
 export function checkLoggedIn(req, res, next) {
-  db.execute(
-    `SELECT * from users WHERE accessToken = '${req.headers.accesstoken}'`
-  ).then((results) => {
-    if (results.length == 0) {
-      return res.json({
-        error: "ACCESS_DENIED",
-        type: "AUTHORIZATION",
-      });
-    } else {
-      if (results[0][0].verified == 0) {
+  if (req.headers.accesstoken) {
+    db.execute(
+      `SELECT * from users WHERE accessToken = '${req.headers.accesstoken}'`
+    ).then((results) => {
+      if (results[0].length == 0) {
         return res.json({
-          error: "user not verified",
-          message: "please reset your password to verify your account",
+          error: "ACCESS_DENIED",
+          type: "AUTHORIZATION",
         });
       } else {
-        next();
+        if (results[0][0].verified == 0) {
+          return res.json({
+            error: "user not verified",
+            message: "please reset your password to verify your account",
+          });
+        } else {
+          next();
+        }
       }
-    }
-  });
+    });
+  } else {
+    return res.json({
+      error: "ACCESS_DENIED",
+      type: "AUTHORIZATION",
+    });
+  }
 }
 
 export function checkPermission(allowedUsers) {

@@ -121,11 +121,9 @@ export function generateCSVfileContent(req, res) {
 
       db.execute(`SELECT * FROM ${bookId}`)
         .then((results) => {
-          console.log(results[0].length);
           let arr = [];
           for (let i = 0; i < results[0].length; i++) {
             let currentNode = results[0][i];
-            console.log("current node i = ", i, currentNode);
             let nodeArr = {};
             nodeArr.ISBN = isbn;
             nodeArr.Book_Title = bookName;
@@ -147,7 +145,6 @@ export function generateCSVfileContent(req, res) {
             }
             nodeArr.Video_Exists = false;
             nodeArr.Video_Link = null;
-            console.log(nodeArr);
             arr.push(nodeArr);
           }
           res.send(arr);

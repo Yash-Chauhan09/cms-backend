@@ -39,7 +39,11 @@ indexRouter
 
 indexRouter
   .route("/book/:bookid/generate-content-links-csv")
-  .get(generateCSVfileContent);
+  .get(
+    checkLoggedIn,
+    checkPermission(["admin", "superuser"]),
+    generateCSVfileContent
+  );
 
 indexRouter
   .route("/book/:bookid/children/:nodeid")
