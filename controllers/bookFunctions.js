@@ -100,7 +100,6 @@ export function getQCremarks(req, res) {
   let sql = `SELECT * FROM ${bookId} WHERE nodeid='${req.params.nodeid}'`;
 
   db.execute(sql).then((results) => {
-    console.log(results, results[0], results[0][0]);
     obj.node_info = results[0][0];
   });
 
@@ -111,4 +110,53 @@ export function getQCremarks(req, res) {
     obj.remarks_info = results[0];
     res.json(obj);
   });
+}
+
+export function generateCSVfileContent(req, res) {
+  let bookId = removeHyphens(req.params.bookid);
+  db.execute(`SELECT * FROM books WHERE bookid = '${req.params.bookid}'`)
+    .then((result) => {
+      let isbn = result[0][0].isbn;
+      let bookName = result[0][0].title;
+
+      db.execute(`SELECT * FROM ${bookId}`)
+        .then((results) => {
+          console.log(results[0].length);
+          let arr = [];
+          for (let i = 0; i < results[0].length; i++) {
+            let currentNode = results[0][i];
+            console.log("current node i = ", i, currentNode);
+            let nodeArr = {};
+            nodeArr.ISBN = isbn;
+            nodeArr.Book_Title = bookName;
+            nodeArr.Name = currentNode.name;
+            nodeArr.Page = currentNode.page;
+            if (currentNode.type == "question") {
+              nodeArr.Question_Exists = true;
+              nodeArr.Question_Link = `https://freecoedu-cms.herokuapp.com/index/book/${bookId}/node/${currentNode.nodeid}`;
+            } else {
+              nodeArr.Question_Exists = false;
+              nodeArr.Question_Link = null;
+            }
+            if (currentNode.answer == "null") {
+              nodeArr.Answer_Exists = false;
+              nodeArr.Answer_Link = null;
+            } else {
+              nodeArr.Answer_Exists = true;
+              nodeArr.Answer_Link = `https://freecoedu-cms.herokuapp.com/index/book/${bookId}/node/${currentNode.nodeid}`;
+            }
+            nodeArr.Video_Exists = false;
+            nodeArr.Video_Link = null;
+            console.log(nodeArr);
+            arr.push(nodeArr);
+          }
+          res.send(arr);
+        })
+        .catch((err) => {
+          res.json(err.code);
+        });
+    })
+    .catch((err) => {
+      res.json(err.code);
+    });
 }
