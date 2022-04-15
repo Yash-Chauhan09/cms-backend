@@ -9,6 +9,7 @@ import {
   updateBook,
   postQCremarks,
   getQCremarks,
+  generateCSVfileContent,
 } from "../controllers/bookFunctions.js";
 import {
   checkLoggedIn,
@@ -35,6 +36,10 @@ indexRouter
   .post(checkLoggedIn, checkPermission(["admin", "superuser"]), postTOC)
   .delete(checkLoggedIn, checkPermission(["admin", "superuser"]), deleteBook)
   .put(checkLoggedIn, checkPermission(["admin", "superuser"]), updateBook);
+
+indexRouter
+  .route("/book/:bookid/generate-content-links-csv")
+  .get(generateCSVfileContent);
 
 indexRouter
   .route("/book/:bookid/children/:nodeid")
