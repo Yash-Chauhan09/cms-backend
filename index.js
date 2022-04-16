@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: ["https://freecoedu-cms.herokuapp.com"],
+    origin: "https://freecoedu-cms.herokuapp.com",
     allowedHeaders: "*",
   })
 );
