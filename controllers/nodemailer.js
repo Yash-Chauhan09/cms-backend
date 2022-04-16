@@ -23,7 +23,7 @@ export async function sendMail(data) {
     <h1>click on the below link to reset your password</h1>
     <h3>email : ${data.email}</h3>
     <h3>password : ${data.password}</h3>
-    <h3>Sign-in here: https://cms-yash.netlify.app/auth/signin</h3>
+    <h3>Sign-in here: https://freecoedu-cms-frontend.herokuapp.com/</h3>
     `, // html body
   });
 
