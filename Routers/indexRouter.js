@@ -21,6 +21,7 @@ import {
   deleteTOC,
   getNodeInfo,
   updateAnswer,
+  updateQuestion,
 } from "../controllers/tocFunctions.js";
 
 const indexRouter = express.Router();
@@ -59,6 +60,10 @@ indexRouter
 indexRouter
   .route("/book/:bookid/node/:nodeid/answer")
   .put(checkLoggedIn, checkPermission(["admin", "superuser"]), updateAnswer);
+
+indexRouter
+  .route("/book/:bookid/node/:nodeid/question")
+  .put(checkLoggedIn, checkPermission(["admin", "superuser"]), updateQuestion);
 
 indexRouter
   .route("/book/:bookid/qc/parent/:parentid/node/:nodeid/")

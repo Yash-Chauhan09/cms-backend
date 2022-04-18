@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://freecoedu-cms.herokuapp.com",
+    origin: [
+      "https://freecoedu-cms.herokuapp.com",
+      "https://freecoedu-cms-frontend.herokuapp.com",
+    ],
     allowedHeaders: "*",
   })
 );
